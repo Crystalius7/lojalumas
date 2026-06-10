@@ -45,7 +45,7 @@
     <h1>📬 Personalizuotų pasiūlymų generatorius</h1>
     <p class="note">
       Įklijuokite potencialius klientus, po vieną eilutėje, formatu:<br>
-      <b>Pavadinimas; el.paštas; #spalva; prizo tekstas; kontaktinio asmens vardas (nebūtina)</b><br>
+      <b>Pavadinimas; el.paštas; #spalva; prizo tekstas; vardas (nebūtina); tipas (kava / maistas / plovykla / grozis)</b><br>
       Kiekvienam bus sugeneruota asmeninė demo nuoroda (kortelė su JŲ pavadinimu ir spalvomis)
       ir paruoštas laiškas. Siųskite po 20–30 per dieną iš savo tikros pašto dėžutės —
       taip laiškai pasiekia gavėjus, o ne šiukšlių aplanką.
@@ -66,14 +66,23 @@ Plovykla Blizgesys; info@blizgesys.lt; #0e7490; 6-as plovimas nemokamai</textare
 <script>
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  function emailText(biz, person, link, sender) {
+  // Category-specific opening line — 6th column: kava / maistas / plovykla / grozis
+  const OPENERS = {
+    kava: (biz) => `užsukęs pas Jus išgerti kavos pagalvojau: „${biz}" klientai tikrai grįžta dažnai — bet ar kas nors skaičiuoja jų apsilankymus? Popierinės kortelės pasimeta, o programėlės atsisiuntinėti niekas nenori.`,
+    maistas: (biz) => `pastebėjau, kad „${biz}" turi nuolatinių klientų, kurie užsuka kelis kartus per savaitę — bet niekas jų lojalumo neapdovanoja. Popierinės kortelės pasimeta, o programėlės atsisiuntinėti niekas nenori.`,
+    plovykla: (biz) => `automobilį plaunantys klientai grįžta kas kelias savaites — „${biz}" tai pastovi auditorija, kurią lengva paskatinti grįžti būtent pas Jus, o ne pas konkurentus už kampo.`,
+    grozis: (biz) => `grožio paslaugų klientai — patys lojaliausi, jei juos tinkamai paskatini. „${biz}" klientė, žinanti, kad po penkto vizito laukia dovana, nesirinks kito salono.`,
+  };
+
+  function emailText(biz, person, link, sender, tipas) {
     const greet = person ? `Sveiki, ${person},` : 'Sveiki,';
+    const opener = (OPENERS[tipas] || ((b) => `pastebėjau, kad „${b}" klientų lojalumui tikriausiai naudoja popierines korteles arba jų neturi visai.`))(biz);
     return `${greet}
 
-esu programuotojas iš Lietuvos. Pastebėjau, kad „${biz}" klientų lojalumui
-tikriausiai naudoja popierines korteles arba jų neturi visai — todėl per
-kelias minutes paruošiau Jums veikiančią skaitmeninę antspaudų kortelę su
-Jūsų pavadinimu ir spalvomis:
+esu programuotojas iš Lietuvos. ${opener}
+
+Todėl per kelias minutes paruošiau Jums veikiančią skaitmeninę antspaudų
+kortelę su Jūsų pavadinimu ir spalvomis:
 
 ${link}
 
@@ -101,7 +110,7 @@ ${sender}`;
     let ok = 0;
 
     for (const row of rows) {
-      const [name, email, color, reward, person] = row.split(';').map((s) => (s || '').trim());
+      const [name, email, color, reward, person, tipas] = row.split(';').map((s) => (s || '').trim());
       if (!name || !email) continue;
       ok++;
 
@@ -111,7 +120,7 @@ ${sender}`;
       const link = base + '?' + q.toString();
 
       const subject = `Skaitmeninė lojalumo kortelė „${name}" — paruošta išbandyti`;
-      const body = emailText(name, person, link, sender);
+      const body = emailText(name, person, link, sender, (tipas || '').toLowerCase());
       const gmail = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       const mailto = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
