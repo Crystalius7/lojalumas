@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standee generatorius — Lojalumas</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #e7e5e4; display: flex; min-height: 100vh; }
+
+  /* ---- editor panel (hidden when printing) ---- */
+  .panel {
+    width: 320px; background: #fff; padding: 24px;
+    display: flex; flex-direction: column; gap: 14px;
+    border-right: 1px solid #d6d3d1;
+  }
+  .panel h1 { font-size: 1.1rem; }
+  .panel label { font-size: .8rem; font-weight: 700; color: #57534e; display: block; margin-bottom: 4px; }
+  .panel input {
+    width: 100%; padding: 10px; border: 1px solid #d6d3d1;
+    border-radius: 8px; font-size: .95rem;
+  }
+  .panel button {
+    padding: 14px; border: none; border-radius: 10px;
+    background: #1c2937; color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer;
+  }
+  .hint { font-size: .78rem; color: #78716c; line-height: 1.5; }
+
+  /* ---- standee preview / print area: A6 portrait (105 x 148 mm) ---- */
+  .preview { flex: 1; display: grid; place-items: center; padding: 30px; }
+  .standee {
+    width: 105mm; height: 148mm;
+    background: #fff;
+    border-radius: 4mm;
+    padding: 10mm 8mm;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    box-shadow: 0 10px 40px rgb(0 0 0 / .2);
+    border-top: 7mm solid var(--brand, #FF5733);
+  }
+  .standee h2 { font-size: 18pt; margin: 5mm 0 1mm; letter-spacing: -0.01em; }
+  .standee .tag { color: var(--brand, #FF5733); font-weight: 800; font-size: 13pt; margin-bottom: 5mm; }
+  .standee canvas { width: 52mm !important; height: 52mm !important; }
+  .standee .steps { margin-top: 5mm; font-size: 10pt; color: #44403c; text-align: left; line-height: 1.9; }
+  .standee .steps b { color: var(--brand, #FF5733); }
+  .standee .url { margin-top: auto; font-size: 8pt; color: #a8a29e; }
+
+  @media print {
+    .panel, .preview { all: unset; }
+    body { background: #fff; display: block; }
+    .standee { box-shadow: none; margin: 0 auto; border-radius: 0; }
+    @page { size: A6 portrait; margin: 0; }
+  }
+</style>
+</head>
+<body>
+  <aside class="panel">
+    <h1>QR standee generatorius</h1>
+    <div><label>Verslo pavadinimas</label><input id="fName" value="Coffee Box Kaunas"></div>
+    <div><label>Kortelės adresas (URL)</label><input id="fUrl" value="https://lojalumas.vercel.app/demo"></div>
+    <div><label>Firminė spalva</label><input id="fColor" type="color" value="#FF5733" style="height:42px"></div>
+    <div><label>Prizo tekstas</label><input id="fReward" value="10-a kava nemokamai!"></div>
+    <button onclick="window.print()">🖨️ Spausdinti (A6)</button>
+    <p class="hint">Spausdinkite ant storo popieriaus (200+ g/m²), įdėkite į A6 stovelį
+    (~3&nbsp;€ knygyne) ir pastatykite prie kasos.</p>
+  </aside>
+
+  <main class="preview">
+    <div class="standee" id="standee">
+      <h2 id="sName"></h2>
+      <div class="tag" id="sReward"></div>
+      <canvas id="qr"></canvas>
+      <div class="steps">
+        <b>1.</b> Nuskenuokite QR kodą telefonu<br>
+        <b>2.</b> Rinkite antspaudus su kiekvienu pirkiniu<br>
+        <b>3.</b> Atsiimkite prizą!
+      </div>
+      <div class="url" id="sUrl"></div>
+    </div>
+  </main>
+
+<script>
+  function update() {
+    const name = document.getElementById('fName').value;
+    const url = document.getElementById('fUrl').value;
+    const color = document.getElementById('fColor').value;
+    const reward = document.getElementById('fReward').value;
+
+    document.getElementById('sName').textContent = name;
+    document.getElementById('sReward').textContent = reward;
+    document.getElementById('sUrl').textContent = url;
+    document.getElementById('standee').style.setProperty('--brand', color);
+
+    QRCode.toCanvas(document.getElementById('qr'), url, {
+      width: 400, margin: 1,
+      color: { dark: '#1c1917', light: '#ffffff' },
+    });
+  }
+  document.querySelectorAll('.panel input').forEach((i) => i.addEventListener('input', update));
+  update();
+</script>
+</body>
+</html>
