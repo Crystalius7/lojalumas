@@ -1,0 +1,4 @@
+# prospect lists contain real emails — never publish them to the public repo
+prospects-*.txt
+*.csv
+node_modules/
