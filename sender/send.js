@@ -19,6 +19,12 @@ const OPENERS = {
   maistas: 'Greito maisto įstaigų klientai paprastai renkasi iš kelių įprastų vietų — lojalumo programa dažnai nulemia, kur jie sugrįš.',
   plovykla: 'Automobilių plovyklų klientai paslaugomis naudojasi reguliariai — lojalumo programa padeda užtikrinti, kad jie grįžtų pas Jus, o ne pas konkurentus.',
   grozis: 'Grožio paslaugų srityje nuolatiniai klientai yra pagrindinis pajamų šaltinis — aiški lojalumo programa sumažina klientų nutekėjimą.',
+  grooming: 'Augintinių priežiūra — reguliari paslauga: šeimininkai grįžta kas kelias savaites, o lojalumo kortelė užtikrina, kad jie grįžtų būtent pas Jus.',
+  geles: 'Gėlių perkama nuolat — šventėms, progoms, namams. Lojalumo kortelė paskatina klientus visada rinktis Jūsų saloną, o ne artimiausią pakeliui.',
+  valymas: 'Valymo paslaugų klientai paslaugomis naudojasi reguliariai — lojalumo programa padeda išlaikyti nuolatinius klientus ir pritraukti naujus.',
+  masazas: 'Masažo ir SPA klientai, turintys aiškią naudą už lojalumą, lankosi dažniau ir rečiau iškeičia Jus į konkurentus.',
+  tattoo: 'Tatuiruočių studijos klientai dažnai grįžta naujiems darbams ir rekomenduoja draugams — lojalumo programa abu šiuos įpročius dar sustiprina.',
+  servisas: 'Serviso klientai grįžta sezoniškai — lojalumo kortelė užtikrina, kad kitą kartą jie pasirinks Jus, o ne ieškos iš naujo.',
 };
 
 // Five practical extra-service ideas per business type — things we can
@@ -49,6 +55,37 @@ const SERVICES = {
 - Google atsiliepimų rinkimo sistema;
 - dovanų kuponų sistema.`,
 };
+SERVICES.grooming = `- vizitų rezervacijos sistema be mėnesinių mokesčių;
+- automatiniai priminimai šeimininkams, kada laikas kitam kirpimui;
+- darbų prieš/po nuotraukų galerija;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`;
+SERVICES.geles = `- paprasta svetainė su puokščių nuotraukomis ir kainomis;
+- išankstinių užsakymų forma šventėms;
+- priminimai klientams apie artėjančias progas (pvz., metines);
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`;
+SERVICES.valymas = `- užsakymų ir atsiėmimo registracijos forma;
+- automatiniai pranešimai klientui, kai užsakymas paruoštas;
+- kainoraščio puslapis, kurį lengva atnaujinti;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`;
+SERVICES.masazas = `- vizitų rezervacijos sistema be mėnesinių mokesčių;
+- automatiniai priminimai klientams apie artėjantį vizitą;
+- paslaugų ir kainų puslapis;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`;
+SERVICES.tattoo = `- darbų portfolio svetainė;
+- užklausų forma su eskizų įkėlimu;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema;
+- laisvų laikų kalendorius.`;
+SERVICES.servisas = `- remonto užsakymų registracijos forma;
+- automatiniai pranešimai klientui apie remonto būseną;
+- sezoniniai priminimai (pvz., laikas paruošti dviratį pavasariui);
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`;
+
 const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
 - internetinė rezervacijos ar užsakymų forma;
 - Google atsiliepimų rinkimo sistema;
