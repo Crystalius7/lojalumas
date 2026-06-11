@@ -18,11 +18,20 @@ one short numbered list instead of asking one at a time.
 - Tenant URLs: /?b=slug. Sales demos: /?b=demo&n=Name&c=%23hex&r=reward (PIN 1234).
 - Tools: /tools/setup.html (onboard client), /tools/standee.html (print QR
   standee), /tools/outreach.html (mail-merge with per-category openers).
-- Outreach: prospects-kaunas.txt (88 Kaunas businesses; gitignored — contains
-  real emails, never commit or publish). Sender: sender/send.js (Node +
-  nodemailer, Gmail or Outlook via sender/.env, warm-up ramp 8/12/18/25 per day,
-  3-7 min random gaps, sent-log dedupe). Scheduled task "LojalumasSender" runs
-  it weekday mornings.
+- Outreach is a TWO-STAGE funnel from projektai777.koduojam@gmail.com:
+  stage 1 sender/send.js — official first-touch email, honest (no visit
+  claims), NO demo link, warm-up ramp 8/12/18/25 per day, 3-7 min gaps,
+  sent-log dedupe. Stage 2 sender/followup.js <email> — personalized demo
+  link, sent only after a positive reply. Reply triage: scheduled task
+  "LojalumasReplies" (weekdays 11:15 & 17:15) runs sender/reply-agent.ps1 —
+  fetches IMAP unseen via check-replies.js, and only if replies exist spawns
+  headless `claude -p` (opus, ultrathink) with reply-agent-prompt.md:
+  INTERESTED→followup.js, DECLINED/BOUNCE→remove-prospect.js, anything
+  uncertain→stays in replies-pending.json for human review (no false
+  positives). Task "LojalumasSender" sends weekday 09:37.
+- prospects-kaunas.txt: 88 Kaunas businesses (gitignored — real emails,
+  never commit or publish). Short URL: https://tinyurl.com/lojalumas
+  (print/verbal only — NEVER in emails, shorteners trip spam filters).
 - All UI and outreach text in Lithuanian. Sender display name: Ignas.
 
 ## Hard rules

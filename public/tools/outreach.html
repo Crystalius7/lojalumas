@@ -66,38 +66,43 @@ Plovykla Blizgesys; info@blizgesys.lt; #0e7490; 6-as plovimas nemokamai</textare
 <script>
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  // Category-specific opening line — 6th column: kava / maistas / plovykla / grozis
+  // Category-specific line — honest and official, no claims of having visited.
+  // 6th column: kava / maistas / plovykla / grozis
   const OPENERS = {
-    kava: (biz) => `užsukęs pas Jus išgerti kavos pagalvojau: „${biz}" klientai tikrai grįžta dažnai — bet ar kas nors skaičiuoja jų apsilankymus? Popierinės kortelės pasimeta, o programėlės atsisiuntinėti niekas nenori.`,
-    maistas: (biz) => `pastebėjau, kad „${biz}" turi nuolatinių klientų, kurie užsuka kelis kartus per savaitę — bet niekas jų lojalumo neapdovanoja. Popierinės kortelės pasimeta, o programėlės atsisiuntinėti niekas nenori.`,
-    plovykla: (biz) => `automobilį plaunantys klientai grįžta kas kelias savaites — „${biz}" tai pastovi auditorija, kurią lengva paskatinti grįžti būtent pas Jus, o ne pas konkurentus už kampo.`,
-    grozis: (biz) => `grožio paslaugų klientai — patys lojaliausi, jei juos tinkamai paskatini. „${biz}" klientė, žinanti, kad po penkto vizito laukia dovana, nesirinks kito salono.`,
+    kava: 'Kavinių ir kepyklėlių klientai dažnai grįžta kasdien ar kas savaitę — skaitmeninė antspaudų kortelė padeda paskatinti juos rinktis būtent Jus.',
+    maistas: 'Greito maisto įstaigų klientai paprastai renkasi iš kelių įprastų vietų — lojalumo programa dažnai nulemia, kur jie sugrįš.',
+    plovykla: 'Automobilių plovyklų klientai paslaugomis naudojasi reguliariai — lojalumo programa padeda užtikrinti, kad jie grįžtų pas Jus, o ne pas konkurentus.',
+    grozis: 'Grožio paslaugų srityje nuolatiniai klientai yra pagrindinis pajamų šaltinis — aiški lojalumo programa sumažina klientų nutekėjimą.',
   };
 
+  // First-touch email: official tone, NO demo link — the demo goes out
+  // only after the prospect replies with interest (two-stage funnel).
   function emailText(biz, person, link, sender, tipas) {
-    const greet = person ? `Sveiki, ${person},` : 'Sveiki,';
-    const opener = (OPENERS[tipas] || ((b) => `pastebėjau, kad „${b}" klientų lojalumui tikriausiai naudoja popierines korteles arba jų neturi visai.`))(biz);
-    return `${greet}
+    const opener = OPENERS[tipas] || 'Skaitmeninė antspaudų kortelė padeda paskatinti klientus sugrįžti dažniau.';
+    return `Laba diena,
 
-esu programuotojas iš Lietuvos. ${opener}
+esu programuotojas ${sender} iš Kauno, kuriu skaitmenines lojalumo korteles
+smulkiajam verslui. Siūlau tokią išbandyti ir „${biz}".
 
-Todėl per kelias minutes paruošiau Jums veikiančią skaitmeninę antspaudų
-kortelę su Jūsų pavadinimu ir spalvomis:
+${opener}
 
-${link}
+Kaip tai veikia:
+- klientas vieną kartą nuskenuoja QR kodą prie kasos — kortelė atsidaro
+  naršyklėje, jokios programėlės atsisiųsti nereikia;
+- pirkimo metu darbuotojas slaptu PIN kodu pažymi antspaudą kliento telefone;
+- surinkęs nustatytą antspaudų skaičių, klientas gauna Jūsų pasirinktą prizą.
 
-Atsidarykite telefonu ir išbandykite (darbuotojo PIN demo versijoje: 1234).
-Klientams nereikia jokios programėlės — kortelė atsidaro nuskenavus QR kodą
-prie kasos ir „prilimpa" prie telefono ekrano.
+Kaina — vienkartinis diegimo mokestis. Jokių mėnesinių abonementų.
 
-Jei patiktų turėti tokią su tikru saugiu PIN ir atspausdintu QR stoveliu ant
-kasos — įdiegiu per 48 val. už vienkartinį mokestį, be jokių mėnesinių
-abonementų.
+Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
+ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
+demonstracinę versiją.
 
-Jei nedomina — atsiprašau, kad sutrukdžiau, ir daugiau nerašysiu.
+Jei pasiūlymas neaktualus, atsiprašau už sutrukdymą — daugiau laiškų nesiųsiu.
 
-Pagarbiai,
-${sender}`;
+Pagarbiai
+${sender}
+https://projektai777.github.io`;
   }
 
   document.getElementById('gen').onclick = () => {

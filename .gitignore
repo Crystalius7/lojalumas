@@ -3,7 +3,11 @@ prospects-*.txt
 *.csv
 node_modules/
 
-# sender credentials and send history — never commit
+# sender credentials, send history and reply data — never commit
 sender/.env
 sender/sent-log.json
 sender/.token.json
+sender/replies-pending.json
+sender/declined.json
+sender/agent-log.md
+sender/agent-last-run.log
