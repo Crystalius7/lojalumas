@@ -81,7 +81,7 @@ Plovykla Blizgesys; info@blizgesys.lt; #0e7490; 6-as plovimas nemokamai</textare
     const opener = OPENERS[tipas] || 'Skaitmeninė antspaudų kortelė padeda paskatinti klientus sugrįžti dažniau.';
     return `Laba diena,
 
-esu programuotojas ${sender} iš Kauno, kuriu skaitmenines lojalumo korteles
+Esu programuotojas ${sender} iš Kauno, kuriu skaitmenines lojalumo korteles
 smulkiajam verslui. Siūlau tokią išbandyti ir „${biz}".
 
 ${opener}
@@ -93,6 +93,8 @@ Kaip tai veikia:
 - surinkęs nustatytą antspaudų skaičių, klientas gauna Jūsų pasirinktą prizą.
 
 Kaina — vienkartinis diegimo mokestis. Jokių mėnesinių abonementų.
+Papildomos funkcijos gali būti įdiegtos pagal Jūsų poreikius už papildomą
+mokestį.
 
 Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
@@ -101,8 +103,7 @@ demonstracinę versiją.
 Jei pasiūlymas neaktualus, atsiprašau už sutrukdymą — daugiau laiškų nesiųsiu.
 
 Pagarbiai
-${sender}
-https://projektai777.github.io`;
+${sender}.`;
   }
 
   document.getElementById('gen').onclick = () => {

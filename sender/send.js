@@ -25,7 +25,7 @@ function buildEmail(p) {
   const subject = `Dėl klientų lojalumo programos „${p.name}"`;
   const body = `Laba diena,
 
-esu programuotojas Ignas iš Kauno, kuriu skaitmenines lojalumo korteles
+Esu programuotojas Ignas iš Kauno, kuriu skaitmenines lojalumo korteles
 smulkiajam verslui. Siūlau tokią išbandyti ir „${p.name}".
 
 ${opener}
@@ -37,6 +37,8 @@ Kaip tai veikia:
 - surinkęs nustatytą antspaudų skaičių, klientas gauna Jūsų pasirinktą prizą.
 
 Kaina — vienkartinis diegimo mokestis. Jokių mėnesinių abonementų.
+Papildomos funkcijos gali būti įdiegtos pagal Jūsų poreikius už papildomą
+mokestį.
 
 Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
@@ -45,8 +47,7 @@ demonstracinę versiją.
 Jei pasiūlymas neaktualus, atsiprašau už sutrukdymą — daugiau laiškų nesiųsiu.
 
 Pagarbiai
-${SENDER_NAME}
-https://projektai777.github.io`;
+${SENDER_NAME}.`;
   return { subject, body };
 }
 
@@ -61,9 +62,17 @@ const today = () => new Date().toISOString().slice(0, 10);
   const deliver = dry ? null : await createDeliver();
 
   if (testTo) {
-    const { subject, body } = buildEmail({ name: 'Kavinė Aroma (TEST)', tipas: 'kava' });
+    // node send.js --test you@x.lt [kava|maistas|plovykla|grozis]
+    const tipas = process.argv[testIdx + 2] || 'kava';
+    const NAMES = {
+      kava: 'Kavinė Aroma (TEST)',
+      maistas: 'Picerija Roma (TEST)',
+      plovykla: 'Plovykla Blizgesys (TEST)',
+      grozis: 'Grožio salonas Stilius (TEST)',
+    };
+    const { subject, body } = buildEmail({ name: NAMES[tipas] || 'Testas', tipas });
     await deliver({ to: testTo, subject, text: body });
-    console.log(`Test email sent to ${testTo}`); return;
+    console.log(`Test email (${tipas}) sent to ${testTo}`); return;
   }
 
   const log = loadLog();

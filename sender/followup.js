@@ -18,7 +18,7 @@ function buildFollowup(p) {
   const subject = `Demonstracinė „${p.name}" lojalumo kortelė`;
   const body = `Laba diena,
 
-ačiū už atsakymą. Paruošiau demonstracinę „${p.name}" lojalumo
+Ačiū už atsakymą. Paruošiau demonstracinę „${p.name}" lojalumo
 kortelės versiją:
 
 ${link}
@@ -29,13 +29,13 @@ darbuotojo PIN — 1234.
 
 Galutinėje versijoje būtų Jūsų logotipas, tikras saugus PIN, Jūsų
 pasirinktas prizas ir atspausdinti QR kodai prie kasos. Įdiegiu per 48
-valandas nuo patvirtinimo.
+valandas nuo patvirtinimo. Papildomos funkcijos pagal Jūsų poreikius —
+už papildomą mokestį.
 
 Mielai atsakysiu į klausimus.
 
 Pagarbiai
-${SENDER_NAME}
-https://projektai777.github.io`;
+${SENDER_NAME}.`;
   return { subject, body };
 }
 
