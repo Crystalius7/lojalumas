@@ -9,7 +9,8 @@
 
 const { loadProspects, loadLog, saveLog, createDeliver, SENDER_NAME } = require('./lib');
 
-const RAMP = [8, 12, 18, 25]; // emails/day: day1, day2, day3, day4+
+// Daily volume: random 5-10 per day — low, human-looking, never a pattern.
+const dailyCap = () => 5 + Math.floor(Math.random() * 6);
 const MIN_GAP_MIN = 3, MAX_GAP_MIN = 7;
 
 // Honest, official category line — no claims of having visited.
@@ -129,7 +130,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 
   const log = loadLog();
   const dayCount = Object.keys(log.days).length + (log.days[today()] ? 0 : 1);
-  const cap = RAMP[Math.min(dayCount - 1, RAMP.length - 1)];
+  const cap = dailyCap();
   const sentToday = log.days[today()] || 0;
   const budget = cap - sentToday;
 
