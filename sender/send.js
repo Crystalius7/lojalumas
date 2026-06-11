@@ -20,8 +20,43 @@ const OPENERS = {
   grozis: 'Grožio paslaugų srityje nuolatiniai klientai yra pagrindinis pajamų šaltinis — aiški lojalumo programa sumažina klientų nutekėjimą.',
 };
 
+// Five practical extra-service ideas per business type — things we can
+// build cheaply (little or zero infrastructure cost).
+const SERVICES = {
+  kava: `- paprasta svetainė su meniu, darbo laiku ir nuotraukomis;
+- išankstinių užsakymų forma (klientai užsisako atsiėmimui be skambučio);
+- Google atsiliepimų rinkimo sistema (QR kodas prie kasos: patenkinti
+  klientai nukreipiami palikti viešą atsiliepimą, nepatenkintų pastabos
+  atkeliauja tiesiai Jums);
+- dienos pasiūlymų puslapis, kurį atnaujinate per 30 sekundžių telefonu;
+- dovanų kuponų sistema šventiniam laikotarpiui.`,
+  maistas: `- internetinis meniu su QR kodais ant staliukų;
+- užsakymų išsinešimui forma be tarpininkų komisinių;
+- Google atsiliepimų rinkimo sistema (QR kodas prie kasos);
+- dienos pietų puslapis, kurį atnaujinate per 30 sekundžių telefonu;
+- dovanų kuponų sistema.`,
+  plovykla: `- internetinė vizitų rezervacijos sistema be mėnesinių mokesčių;
+- automatiniai priminimai klientams el. paštu apie laiką pakartotiniam
+  plovimui;
+- kainų skaičiuoklė svetainėje (klientas pasirenka automobilį ir paslaugas
+  — iškart mato kainą);
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`,
+  grozis: `- vizitų rezervacijos sistema be mėnesinių mokesčių;
+- automatiniai priminimai klientėms apie artėjantį vizitą;
+- darbų portfolio svetainė su nuotraukomis;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema.`,
+};
+const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
+- internetinė rezervacijos ar užsakymų forma;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema;
+- kasdienių rutininių darbų automatizavimas.`;
+
 function buildEmail(p) {
   const opener = OPENERS[p.tipas] || 'Skaitmeninė antspaudų kortelė padeda paskatinti klientus sugrįžti dažniau.';
+  const services = SERVICES[p.tipas] || SERVICES_DEFAULT;
   const subject = `Dėl klientų lojalumo programos „${p.name}"`;
   const body = `Laba diena,
 
@@ -40,6 +75,10 @@ Esame nauja įmonė, todėl siūlome ženkliai palankesnes kainas nei rinkoje
 nusistovėjusios alternatyvos — vienkartinis diegimo mokestis, jokių mėnesinių
 abonementų. Papildomos funkcijos gali būti įdiegtos pagal Jūsų poreikius už
 papildomą mokestį.
+
+Taip pat kuriame ir kitus sprendimus, palengvinančius kasdienius verslo
+darbus — taip pat už itin konkurencingą kainą. Pavyzdžiui:
+${services}
 
 Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
