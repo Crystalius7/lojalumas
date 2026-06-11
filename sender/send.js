@@ -44,8 +44,6 @@ Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvom
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
 demonstracinę versiją.
 
-Jei pasiūlymas neaktualus, atsiprašau už sutrukdymą — daugiau laiškų nesiųsiu.
-
 Pagarbiai
 ${SENDER_NAME}.`;
   return { subject, body };
