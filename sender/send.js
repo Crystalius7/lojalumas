@@ -35,11 +35,12 @@ const OPENERS = {
   foto: 'Fotografų klientai renkasi pagal portfolio ir užsakymo patogumą — tvarkinga svetainė su rezervacijos forma padeda gauti daugiau užsakymų.',
   spauda: 'Spaustuvių klientai dažnai siunčia užklausas ir failus el. paštu — patogi užsakymų forma su failų įkėlimu sutaupo daug susirašinėjimo.',
   optika: 'Optikų klientai grįžta reguliariai — pasitikrinti regėjimo ar atsinaujinti akinių. Skaitmeniniai įrankiai padeda priminti apie Jus laiku.',
+  nuoma: 'Sodybų ir pramogų nuomos užsakymai dažniausiai derinami telefonu ar žinutėmis — internetinis rezervacijų kalendorius sutaupo daug skambučių ir padeda neprarasti nė vieno kliento.',
 };
 
 // Business types that get the SERVICES-ONLY letter (no loyalty card pitch).
 const NO_LOYALTY = new Set(['autoservisas', 'klinika', 'statyba', 'sportas', 'paslaugos',
-  'mokykla', 'foto', 'spauda', 'optika']);
+  'mokykla', 'foto', 'spauda', 'optika', 'nuoma']);
 
 // Five practical extra-service ideas per business type — things we can
 // build cheaply (little or zero infrastructure cost).
@@ -144,6 +145,11 @@ SERVICES.optika = `- regėjimo patikros registracijos forma;
 - Google atsiliepimų rinkimo sistema;
 - svetainė su prekėmis ir kainomis;
 - dovanų kuponų sistema.`;
+SERVICES.nuoma = `- rezervacijų kalendorius su laisvų datų rodymu (sodyboms, baidarėms);
+- užklausų forma su automatiniu patvirtinimu klientui;
+- dvigubų rezervacijų apsauga;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų sistema šventėms.`;
 
 const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
 - internetinė rezervacijos ar užsakymų forma;
