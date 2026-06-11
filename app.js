@@ -121,9 +121,19 @@ const staticBackend = {
   async rpc(fn, { p_pin }) {
     const t = TENANTS[slug];
     const c = this._load();
+    const now = Date.now();
+
+    // Demo abuse guard: the demo PIN is public, so each device gets ONE
+    // full card cycle and 14 days — enough for any sales demo, useless
+    // as a free production card (every customer's phone locks itself).
+    if (isDemo) {
+      if (!c.first) { c.first = now; this._save(c); }
+      if ((c.cycles || 0) >= 1 || now - c.first > 14 * 24 * 3600 * 1000) {
+        return { ok: false, error: 'demo_over' };
+      }
+    }
 
     // brute-force gate: 5 wrong PINs in 10 min locks the pad
-    const now = Date.now();
     c.fails = (c.fails || []).filter((ts) => now - ts < 10 * 60 * 1000);
     if (c.fails.length >= 5) return { ok: false, error: 'rate_limited' };
 
@@ -136,6 +146,7 @@ const staticBackend = {
     if (fn === 'redeem_reward') {
       if (c.stamps < t.stamps_needed) return { ok: false, error: 'card_not_full' };
       c.stamps = 0;
+      if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
       this._save(c);
       return { ok: true };
     }
@@ -197,6 +208,7 @@ function render() {
       ${full ? '🎁 Atsiimti prizą' : 'Gauti antspaudą'}
     </button>
     <p class="small-print">Mygtuką spaudžia darbuotojas pirkimo metu.</p>
+    ${isDemo ? '<p class="small-print">Demonstracinė versija · projektai777.koduojam@gmail.com</p>' : ''}
   `;
 
   document.getElementById('actionBtn').onclick = () =>
@@ -276,6 +288,7 @@ async function submitPin() {
         rate_limited: 'Per daug bandymų. Palaukite 10 min.',
         too_fast: 'Palaukite minutę tarp antspaudų',
         card_not_full: 'Kortelė dar nepilna',
+        demo_over: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
       }[res.error] || 'Klaida. Bandykite dar kartą.';
       toast(msg, true);
     }
