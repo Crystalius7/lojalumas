@@ -36,9 +36,10 @@ Kaip tai veikia:
 - pirkimo metu darbuotojas slaptu PIN kodu pažymi antspaudą kliento telefone;
 - surinkęs nustatytą antspaudų skaičių, klientas gauna Jūsų pasirinktą prizą.
 
-Kaina — vienkartinis diegimo mokestis. Jokių mėnesinių abonementų.
-Papildomos funkcijos gali būti įdiegtos pagal Jūsų poreikius už papildomą
-mokestį.
+Esame nauja įmonė, todėl siūlome ženkliai palankesnes kainas nei rinkoje
+nusistovėjusios alternatyvos — vienkartinis diegimo mokestis, jokių mėnesinių
+abonementų. Papildomos funkcijos gali būti įdiegtos pagal Jūsų poreikius už
+papildomą mokestį.
 
 Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
