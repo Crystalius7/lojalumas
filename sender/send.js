@@ -158,16 +158,18 @@ const today = () => new Date().toISOString().slice(0, 10);
       await sleep(gap);
     }
   }
-  // Deliverability canary: one random REAL email from today's batch also
-  // goes to an independent test inbox (different person/IP) to verify it
-  // lands in the inbox, not spam. Not logged as a prospect send.
+  // Deliverability canary: ONE-TIME — a random real email also goes to an
+  // independent test inbox (different person/IP) to verify inbox placement.
+  // Runs only once ever (flag stored in the log).
   const SPAM_TEST = 'deivisxxl@gmail.com';
-  if (!dry && queue.length) {
+  if (!dry && queue.length && !log.spamTestDone) {
     const p = queue[Math.floor(Math.random() * queue.length)];
     const { subject, body } = buildEmail(p);
     try {
       await deliver({ to: SPAM_TEST, subject, text: body });
-      console.log(`Spam-test copy ("${p.name}") sent to ${SPAM_TEST}`);
+      log.spamTestDone = { name: p.name, at: new Date().toISOString() };
+      saveLog(log);
+      console.log(`One-time spam-test copy ("${p.name}") sent to ${SPAM_TEST}`);
     } catch (e) {
       console.error(`spam-test copy failed: ${e.message}`);
     }
