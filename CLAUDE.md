@@ -1,4 +1,4 @@
-# Lojalumas — project instructions
+﻿# Lojalumas — project instructions
 
 ## Autonomy policy (user directive)
 Be as autonomous as possible. Do everything yourself without asking — installs,
@@ -23,12 +23,12 @@ one short numbered list instead of asking one at a time.
   claims), NO demo link, warm-up ramp 8/12/18/25 per day, 3-7 min gaps,
   sent-log dedupe. Stage 2 sender/followup.js <email> — personalized demo
   link, sent only after a positive reply. Reply triage: scheduled task
-  "LojalumasReplies" (weekdays 11:15 & 17:15) runs sender/reply-agent.ps1 —
+  "LojalumasReplies" (daily incl. weekends, 11:15 & 17:15) runs sender/reply-agent.ps1 —
   fetches IMAP unseen via check-replies.js, and only if replies exist spawns
   headless `claude -p` (opus, ultrathink) with reply-agent-prompt.md:
   INTERESTED→followup.js, DECLINED/BOUNCE→remove-prospect.js, anything
   uncertain→stays in replies-pending.json for human review (no false
-  positives). Task "LojalumasSender" sends weekday 09:37.
+  positives). Task "LojalumasSender" sends daily incl. weekends, 09:17 + 0-40 min jitter.
 - prospects-kaunas.txt: 88 Kaunas businesses (gitignored — real emails,
   never commit or publish). Short URL: https://tinyurl.com/lojalumas
   (print/verbal only — NEVER in emails, shorteners trip spam filters).
