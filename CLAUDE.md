@@ -27,6 +27,10 @@ one short numbered list instead of asking one at a time.
   HIMSELF. Declines/bounces are removed with
   `node sender/remove-prospect.js <email> "reason"` (or by telling Claude).
   Task "LojalumasSender" sends daily incl. weekends, 09:17 + 0-40 min jitter.
+  WakeToRun is ON: the task wakes the PC from sleep; sender/power.ps1 +
+  send.js return it to sleep after the batch ONLY if the task woke it
+  (Power-Troubleshooter event Id 1 < 180 s at start) and the user has been
+  idle ≥ 300 s. Works from sleep, not from full shutdown.
 - prospects-kaunas.txt: 88 Kaunas businesses (gitignored — real emails,
   never commit or publish). Short URL: https://tinyurl.com/lojalumas
   (print/verbal only — NEVER in emails, shorteners trip spam filters).
