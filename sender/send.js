@@ -31,10 +31,15 @@ const OPENERS = {
   statyba: 'Statybos ir remonto įmonėms daugiausia laiko atima skambučiai, užklausos ir sąmatos — dalį šių darbų galima automatizuoti.',
   sportas: 'Sporto klubų ir studijų klientai nori paprastos registracijos ir aiškių tvarkaraščių — tai įmanoma be brangių platformų ir mėnesinių mokesčių.',
   paslaugos: 'Daugumai paslaugų verslų daugiausia laiko atima užklausos, registracijos ir rutininis administravimas — dalį šių darbų galima nebrangiai automatizuoti.',
+  mokykla: 'Vairavimo mokyklų mokiniai ieško informacijos ir registruojasi internetu — patogi registracija ir aiški svetainė tiesiogiai lemia, kiek mokinių užsiregistruos pas Jus.',
+  foto: 'Fotografų klientai renkasi pagal portfolio ir užsakymo patogumą — tvarkinga svetainė su rezervacijos forma padeda gauti daugiau užsakymų.',
+  spauda: 'Spaustuvių klientai dažnai siunčia užklausas ir failus el. paštu — patogi užsakymų forma su failų įkėlimu sutaupo daug susirašinėjimo.',
+  optika: 'Optikų klientai grįžta reguliariai — pasitikrinti regėjimo ar atsinaujinti akinių. Skaitmeniniai įrankiai padeda priminti apie Jus laiku.',
 };
 
 // Business types that get the SERVICES-ONLY letter (no loyalty card pitch).
-const NO_LOYALTY = new Set(['autoservisas', 'klinika', 'statyba', 'sportas', 'paslaugos']);
+const NO_LOYALTY = new Set(['autoservisas', 'klinika', 'statyba', 'sportas', 'paslaugos',
+  'mokykla', 'foto', 'spauda', 'optika']);
 
 // Five practical extra-service ideas per business type — things we can
 // build cheaply (little or zero infrastructure cost).
@@ -118,6 +123,26 @@ SERVICES.paslaugos = `- paprasta svetainė Jūsų paslaugoms pristatyti;
 - užklausų ar rezervacijų forma internetu;
 - Google atsiliepimų rinkimo sistema;
 - rutininių administracinių darbų automatizavimas;
+- dovanų kuponų sistema.`;
+SERVICES.mokykla = `- registracijos į kursus forma internetu;
+- tvarkaraščių puslapis, kurį lengva atnaujinti;
+- automatiniai priminimai mokiniams apie pamokas;
+- Google atsiliepimų rinkimo sistema;
+- svetainė su kainomis ir dažniausiais klausimais.`;
+SERVICES.foto = `- darbų portfolio svetainė;
+- fotosesijų rezervacijos forma;
+- automatiniai priminimai klientams apie fotosesiją;
+- patogus nuotraukų galerijų perdavimas klientams;
+- Google atsiliepimų rinkimo sistema.`;
+SERVICES.spauda = `- užsakymų forma su failų įkėlimu;
+- automatiniai pranešimai klientui apie užsakymo būseną;
+- preliminarių kainų skaičiuoklė;
+- Google atsiliepimų rinkimo sistema;
+- paprasta svetainė su paslaugų katalogu.`;
+SERVICES.optika = `- regėjimo patikros registracijos forma;
+- automatiniai priminimai klientams apie metinę patikrą;
+- Google atsiliepimų rinkimo sistema;
+- svetainė su prekėmis ir kainomis;
 - dovanų kuponų sistema.`;
 
 const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
