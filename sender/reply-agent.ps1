@@ -26,7 +26,7 @@ $prompt = Get-Content (Join-Path $PSScriptRoot "reply-agent-prompt.md") -Raw
 # to read .env or send email even if a reply attempts prompt-injection.
 # The single allowed command is remove-prospect.js; worst case = a wrongly
 # removed prospect (recoverable), never code execution or credential access.
-$allowed = 'Read,Edit,Write,Bash(node remove-prospect.js:*),Bash(node notify.js:*)'
+$allowed = 'Read,Edit,Write,Bash(node remove-prospect.js:*),Bash(node add-active.js:*)'
 
 claude -p $prompt --model claude-opus-4-8 --max-turns 20 `
     --allowedTools $allowed --add-dir $PSScriptRoot `

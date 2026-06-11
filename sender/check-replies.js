@@ -9,6 +9,7 @@ const { simpleParser } = require('mailparser');
 const { loadEnv } = require('./lib');
 
 const PENDING_FILE = path.join(__dirname, 'replies-pending.json');
+const ACTIVE_FILE = path.join(__dirname, 'active-clients.json');
 
 (async () => {
   const { user, pass } = loadEnv();
@@ -27,14 +28,22 @@ const PENDING_FILE = path.join(__dirname, 'replies-pending.json');
     : [];
   let added = 0;
 
+  // Active clients: the user converses with these personally — their
+  // emails are left UNREAD and untouched for him; the agent never sees them.
+  const active = fs.existsSync(ACTIVE_FILE)
+    ? JSON.parse(fs.readFileSync(ACTIVE_FILE, 'utf8').replace(/^﻿/, ''))
+    : {};
+
   try {
     const uids = await client.search({ seen: false });
     for (const uid of uids || []) {
       const msg = await client.fetchOne(uid, { source: true });
       const parsed = await simpleParser(msg.source);
+      const from = (parsed.from?.value?.[0]?.address || '').toLowerCase();
+      if (active[from]) continue; // user's conversation — skip, keep unread
       pending.push({
         uid,
-        from: parsed.from?.value?.[0]?.address || '',
+        from,
         fromName: parsed.from?.value?.[0]?.name || '',
         subject: parsed.subject || '',
         date: parsed.date || null,

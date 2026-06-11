@@ -11,3 +11,4 @@ sender/replies-pending.json
 sender/declined.json
 sender/agent-log.md
 sender/agent-last-run.log
+sender/active-clients.json
