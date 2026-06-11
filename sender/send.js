@@ -107,21 +107,38 @@ const today = () => new Date().toISOString().slice(0, 10);
   const testIdx = process.argv.indexOf('--test');
   const testTo = testIdx > -1 ? process.argv[testIdx + 1] : null;
 
-  if (!dry && (!EMAIL_USER || !EMAIL_APP_PASSWORD)) {
-    console.error('Missing sender/.env with EMAIL_USER and EMAIL_APP_PASSWORD'); process.exit(1);
-  }
+  // Transport: Microsoft Graph if a token exists (run login.js once),
+  // otherwise SMTP via nodemailer (Gmail app password).
+  const graph = require('./graph');
+  const useGraph = !!graph.loadToken();
+  let deliver; // async ({to, subject, text}) => void
 
-  const transporter = dry ? null : nodemailer.createTransport(
-    IS_OUTLOOK
-      ? { host: 'smtp-mail.outlook.com', port: 587, secure: false,
-          auth: { user: EMAIL_USER, pass: EMAIL_APP_PASSWORD } }
-      : { service: 'gmail', auth: { user: EMAIL_USER, pass: EMAIL_APP_PASSWORD } }
-  );
+  if (dry) {
+    deliver = null;
+  } else if (useGraph) {
+    const accessToken = await graph.getAccessToken();
+    deliver = (msg) => graph.sendMail(accessToken, msg);
+    console.log('Transport: Microsoft Graph');
+  } else {
+    if (!EMAIL_USER || !EMAIL_APP_PASSWORD) {
+      console.error('No Graph token (node login.js) and no sender/.env SMTP credentials.'); process.exit(1);
+    }
+    const transporter = nodemailer.createTransport(
+      IS_OUTLOOK
+        ? { host: 'smtp-mail.outlook.com', port: 587, secure: false,
+            auth: { user: EMAIL_USER, pass: EMAIL_APP_PASSWORD } }
+        : { service: 'gmail', auth: { user: EMAIL_USER, pass: EMAIL_APP_PASSWORD } }
+    );
+    deliver = (msg) => transporter.sendMail({
+      from: `"${SENDER_NAME}" <${EMAIL_USER}>`, to: msg.to, subject: msg.subject, text: msg.text,
+    });
+    console.log('Transport: SMTP');
+  }
 
   if (testTo) {
     const sample = loadProspects()[0];
     const { subject, body } = buildEmail({ ...sample, name: 'Kavinė Aroma (TEST)' });
-    await transporter.sendMail({ from: `"${SENDER_NAME}" <${EMAIL_USER}>`, to: testTo, subject, text: body });
+    await deliver({ to: testTo, subject, text: body });
     console.log(`Test email sent to ${testTo}`); return;
   }
 
@@ -142,7 +159,7 @@ const today = () => new Date().toISOString().slice(0, 10);
       console.log(`--- ${p.name} <${p.email}>\n${subject}\n`);
     } else {
       try {
-        await transporter.sendMail({ from: `"${SENDER_NAME}" <${EMAIL_USER}>`, to: p.email, subject, text: body });
+        await deliver({ to: p.email, subject, text: body });
         log.sent[p.email] = { name: p.name, at: new Date().toISOString() };
         log.days[today()] = (log.days[today()] || 0) + 1;
         saveLog(log);
