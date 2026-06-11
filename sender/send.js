@@ -79,6 +79,7 @@ papildomą mokestį.
 Taip pat kuriame ir kitus sprendimus, palengvinančius kasdienius verslo
 darbus — taip pat už itin konkurencingą kainą. Pavyzdžiui:
 ${services}
+- ir daug kitų — pagal Jūsų poreikius.
 
 Jei norėtumėte pamatyti, kaip kortelė atrodytų su Jūsų pavadinimu, spalvomis
 ir prizu — tiesiog atsakykite į šį laišką, ir atsiųsiu veikiančią
@@ -98,6 +99,19 @@ const today = () => new Date().toISOString().slice(0, 10);
   const testTo = testIdx > -1 ? process.argv[testIdx + 1] : null;
 
   const deliver = dry ? null : await createDeliver();
+
+  // node send.js --first you@x.lt — the EXACT email the first queued real
+  // prospect would receive (their name, their opener), sent to you instead.
+  const firstIdx = process.argv.indexOf('--first');
+  if (firstIdx > -1) {
+    const to = process.argv[firstIdx + 1];
+    const log0 = loadLog();
+    const p = loadProspects().find((x) => !log0.sent[x.email]);
+    if (!p) { console.error('Queue is empty.'); process.exit(1); }
+    const { subject, body } = buildEmail(p);
+    await deliver({ to, subject, text: body });
+    console.log(`Exact first-prospect email (${p.name} <${p.email}>) sent to ${to}`); return;
+  }
 
   if (testTo) {
     // node send.js --test you@x.lt [kava|maistas|plovykla|grozis]
