@@ -1,0 +1,23 @@
+{
+  "name": "lojalumas",
+  "version": "1.0.0",
+  "description": "One codebase, unlimited businesses, **€0 running cost**. Each business lives at its own URL path (`/coffeebox`) and onboarding a new client is pasting one config block — no build step, no database, no server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crystalius7/lojalumas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Crystalius7/lojalumas/issues"
+  },
+  "homepage": "https://github.com/Crystalius7/lojalumas#readme",
+  "dependencies": {
+    "nodemailer": "^8.0.11"
+  }
+}

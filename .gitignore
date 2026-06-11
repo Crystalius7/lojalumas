@@ -2,3 +2,7 @@
 prospects-*.txt
 *.csv
 node_modules/
+
+# sender credentials and send history — never commit
+sender/.env
+sender/sent-log.json
