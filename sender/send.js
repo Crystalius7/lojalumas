@@ -25,7 +25,16 @@ const OPENERS = {
   masazas: 'Masažo ir SPA klientai, turintys aiškią naudą už lojalumą, lankosi dažniau ir rečiau iškeičia Jus į konkurentus.',
   tattoo: 'Tatuiruočių studijos klientai dažnai grįžta naujiems darbams ir rekomenduoja draugams — lojalumo programa abu šiuos įpročius dar sustiprina.',
   servisas: 'Serviso klientai grįžta sezoniškai — lojalumo kortelė užtikrina, kad kitą kartą jie pasirinks Jus, o ne ieškos iš naujo.',
+  // --- services-only types (no loyalty-card pitch) ---
+  autoservisas: 'Autoservisų klientai dažniausiai ateina per rekomendacijas ir internetą — paprasti skaitmeniniai įrankiai padeda atrodyti profesionaliai ir sutaupyti administracinio darbo.',
+  klinika: 'Klinikų registratūros kasdien atsakinėja į tuos pačius klausimus ir skambučius — dalį šio darbo gali atlikti paprasti skaitmeniniai sprendimai.',
+  statyba: 'Statybos ir remonto įmonėms daugiausia laiko atima skambučiai, užklausos ir sąmatos — dalį šių darbų galima automatizuoti.',
+  sportas: 'Sporto klubų ir studijų klientai nori paprastos registracijos ir aiškių tvarkaraščių — tai įmanoma be brangių platformų ir mėnesinių mokesčių.',
+  paslaugos: 'Daugumai paslaugų verslų daugiausia laiko atima užklausos, registracijos ir rutininis administravimas — dalį šių darbų galima nebrangiai automatizuoti.',
 };
+
+// Business types that get the SERVICES-ONLY letter (no loyalty card pitch).
+const NO_LOYALTY = new Set(['autoservisas', 'klinika', 'statyba', 'sportas', 'paslaugos']);
 
 // Five practical extra-service ideas per business type — things we can
 // build cheaply (little or zero infrastructure cost).
@@ -85,6 +94,31 @@ SERVICES.servisas = `- remonto užsakymų registracijos forma;
 - sezoniniai priminimai (pvz., laikas paruošti dviratį pavasariui);
 - Google atsiliepimų rinkimo sistema;
 - dovanų kuponų sistema.`;
+SERVICES.autoservisas = `- registracijos remontui forma internetu;
+- automatiniai pranešimai klientui apie remonto būseną;
+- priminimai klientams apie artėjančią TA ar sezoninį padangų keitimą;
+- Google atsiliepimų rinkimo sistema;
+- paprasta svetainė su paslaugomis ir kainomis.`;
+SERVICES.klinika = `- vizitų registracijos forma internetu;
+- automatiniai priminimai pacientams apie artėjantį vizitą;
+- dažniausių klausimų (D.U.K.) puslapis, mažinantis skambučių skaičių;
+- Google atsiliepimų rinkimo sistema;
+- paprasta, tvarkinga svetainė.`;
+SERVICES.statyba = `- užklausų forma su nuotraukų įkėlimu (klientas iškart parodo objektą);
+- atliktų darbų portfolio svetainė;
+- preliminarios sąmatos skaičiuoklė;
+- Google atsiliepimų rinkimo sistema;
+- automatiniai atsakymai į užklausas.`;
+SERVICES.sportas = `- registracijos į treniruotes forma;
+- tvarkaraščio puslapis, kurį atnaujinate telefonu;
+- automatiniai priminimai klientams apie treniruotes;
+- Google atsiliepimų rinkimo sistema;
+- dovanų kuponų ir narysčių sistema.`;
+SERVICES.paslaugos = `- paprasta svetainė Jūsų paslaugoms pristatyti;
+- užklausų ar rezervacijų forma internetu;
+- Google atsiliepimų rinkimo sistema;
+- rutininių administracinių darbų automatizavimas;
+- dovanų kuponų sistema.`;
 
 const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
 - internetinė rezervacijos ar užsakymų forma;
@@ -95,6 +129,33 @@ const SERVICES_DEFAULT = `- paprasta svetainė Jūsų paslaugoms pristatyti;
 function buildEmail(p) {
   const opener = OPENERS[p.tipas] || 'Skaitmeninė antspaudų kortelė padeda paskatinti klientus sugrįžti dažniau.';
   const services = SERVICES[p.tipas] || SERVICES_DEFAULT;
+
+  // Services-only letter for business types where a loyalty card doesn't fit.
+  if (NO_LOYALTY.has(p.tipas)) {
+    const subject = `Dėl skaitmeninių sprendimų „${p.name}"`;
+    const body = `Laba diena,
+
+Esu programuotojas Ignas iš Kauno, kuriu skaitmeninius sprendimus
+smulkiajam verslui.
+
+${opener}
+
+„${p.name}" galėtume padėti, pavyzdžiui:
+${services}
+- ir daug kitų — pagal Jūsų poreikius.
+
+Esame nauja įmonė, todėl siūlome ženkliai palankesnes kainas nei rinkoje
+nusistovėjusios alternatyvos — dažniausiai vienkartinis mokestis, jokių
+mėnesinių abonementų.
+
+Jei kas nors iš to atrodo aktualu — tiesiog atsakykite į šį laišką, ir
+aptarsime Jūsų poreikius be jokių įsipareigojimų.
+
+Pagarbiai
+${SENDER_NAME}.`;
+    return { subject, body };
+  }
+
   const subject = `Dėl klientų lojalumo programos „${p.name}"`;
   const body = `Laba diena,
 
@@ -137,6 +198,19 @@ const today = () => new Date().toISOString().slice(0, 10);
   const testTo = testIdx > -1 ? process.argv[testIdx + 1] : null;
 
   const deliver = dry ? null : await createDeliver();
+
+  // node send.js --preview <prospect-email> <your-email> — the EXACT letter
+  // a specific prospect would receive, sent to you instead.
+  const prevIdx = process.argv.indexOf('--preview');
+  if (prevIdx > -1) {
+    const pEmail = (process.argv[prevIdx + 1] || '').toLowerCase();
+    const to = process.argv[prevIdx + 2];
+    const p = loadProspects().find((x) => x.email.toLowerCase() === pEmail);
+    if (!p || !to) { console.error('Usage: --preview <prospect-email> <send-to>'); process.exit(1); }
+    const { subject, body } = buildEmail(p);
+    await deliver({ to, subject, text: body });
+    console.log(`Preview of "${p.name}" letter sent to ${to}`); return;
+  }
 
   // node send.js --first you@x.lt — the EXACT email the first queued real
   // prospect would receive (their name, their opener), sent to you instead.
