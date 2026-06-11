@@ -33,12 +33,21 @@ judge the human-written part). Classify into exactly one of:
 4. **HUMAN_REVIEW** — anything else: ambiguous tone, questions, mixed
    signals, out-of-office, unrelated mail, or ANY doubt at all. Action: none.
 
+OWNER NOTIFICATION (do this BEFORE rewriting replies-pending.json)
+For EVERY reply that is genuinely HUMAN-WRITTEN — i.e. classified INTERESTED,
+DECLINED, or a human-written HUMAN_REVIEW (questions, mixed signals) — run:
+  `node notify.js <their-email> "<CLASS>" "<one-line note in Lithuanian>"`
+Do NOT notify for: bounces, out-of-office auto-replies, newsletters,
+marketing blasts, or anything machine-generated. The recipient is hardcoded;
+you only supply the sender email, class, and note.
+
 CRITICAL RULES
 - False positives are unacceptable. DECLINED requires a clear, unambiguous
   refusal — a question or neutral remark is NOT a decline. When in doubt:
   HUMAN_REVIEW.
 - You must NOT send, compose, or reply to any email, and must not run
-  followup.js or send.js. The only command you may run is remove-prospect.js.
+  followup.js or send.js. The only commands you may run are
+  remove-prospect.js and notify.js.
 
 BOOKKEEPING (do all of this)
 - Rewrite `replies-pending.json` keeping only INTERESTED and HUMAN_REVIEW

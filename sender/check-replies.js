@@ -22,7 +22,9 @@ const PENDING_FILE = path.join(__dirname, 'replies-pending.json');
 
   await client.connect();
   const lock = await client.getMailboxLock('INBOX');
-  const pending = fs.existsSync(PENDING_FILE) ? JSON.parse(fs.readFileSync(PENDING_FILE, 'utf8')) : [];
+  const pending = fs.existsSync(PENDING_FILE)
+    ? JSON.parse(fs.readFileSync(PENDING_FILE, 'utf8').replace(/^﻿/, ''))
+    : [];
   let added = 0;
 
   try {
