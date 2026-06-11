@@ -223,6 +223,37 @@ ${SENDER_NAME}.`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const today = () => new Date().toISOString().slice(0, 10);
 
+// ---------- wake-from-sleep support (mirrors RobloxModelsProject) ----------
+// The scheduled task has WakeToRun: it can wake the PC from sleep to send the
+// daily batch. At startup we check whether THIS run woke the machine; if so,
+// we return it to sleep afterwards (unless the user is actively at the desk).
+const { execFileSync } = require('child_process');
+const POWER_PS1 = require('path').join(__dirname, 'power.ps1');
+
+function wokeFromSleep() {
+  try {
+    const out = execFileSync('powershell.exe',
+      ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', POWER_PS1, 'woke'],
+      { timeout: 30000 }).toString().trim();
+    return out === 'YES';
+  } catch {
+    console.log("couldn't read wake history; treating PC as already-awake.");
+    return false;
+  }
+}
+
+function maybeSleep(woke) {
+  if (!woke) { console.log('PC was already awake before this run - leaving it awake.'); return; }
+  console.log('batch done; PC was woken from sleep - returning to sleep.');
+  try {
+    execFileSync('powershell.exe',
+      ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', POWER_PS1, 'sleep'],
+      { timeout: 60000, stdio: 'inherit' });
+  } catch (e) {
+    console.error(`sleep attempt failed: ${e.message}`);
+  }
+}
+
 (async () => {
   const dry = process.argv.includes('--dry');
   const testIdx = process.argv.indexOf('--test');
@@ -270,13 +301,22 @@ const today = () => new Date().toISOString().slice(0, 10);
     console.log(`Test email (${tipas}) sent to ${testTo}`); return;
   }
 
+  // Detect wake-state FIRST (the resume event must be fresh), before the
+  // batch spends an hour sending. Only relevant for real scheduled runs.
+  const woke = !dry && wokeFromSleep();
+  if (woke) console.log('PC was woken from sleep by this scheduled run.');
+
   const log = loadLog();
   const dayCount = Object.keys(log.days).length + (log.days[today()] ? 0 : 1);
   const cap = dailyCap();
   const sentToday = log.days[today()] || 0;
   const budget = cap - sentToday;
 
-  if (budget <= 0) { console.log(`Daily cap (${cap}) already reached. Done.`); return; }
+  if (budget <= 0) {
+    console.log(`Daily cap (${cap}) already reached. Done.`);
+    maybeSleep(woke);
+    return;
+  }
 
   const queue = loadProspects().filter((p) => !log.sent[p.email]).slice(0, budget);
   console.log(`Day ${dayCount}: cap ${cap}, sent today ${sentToday}, sending ${queue.length} now${dry ? ' (DRY RUN)' : ''}.`);
@@ -318,4 +358,5 @@ const today = () => new Date().toISOString().slice(0, 10);
   }
 
   console.log('Batch complete.');
+  maybeSleep(woke);
 })();
