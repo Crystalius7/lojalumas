@@ -25,9 +25,12 @@ function loadEnv() {
   };
 }
 
+// PowerShell-written files may carry a UTF-8 BOM — always strip it.
+const readText = (f) => fs.readFileSync(f, 'utf8').replace(/^﻿/, '');
+
 function loadProspects() {
   if (!fs.existsSync(PROSPECTS_FILE)) return [];
-  return fs.readFileSync(PROSPECTS_FILE, 'utf8').split('\n')
+  return readText(PROSPECTS_FILE).split('\n')
     .map((l) => l.trim()).filter(Boolean)
     .map((l) => {
       const [name, email, color, reward, person, tipas] = l.split(';').map((s) => (s || '').trim());
@@ -38,7 +41,7 @@ function loadProspects() {
 
 function removeProspect(email) {
   if (!fs.existsSync(PROSPECTS_FILE)) return false;
-  const lines = fs.readFileSync(PROSPECTS_FILE, 'utf8').split('\n');
+  const lines = readText(PROSPECTS_FILE).split('\n');
   const kept = lines.filter((l) => !l.toLowerCase().includes(email.toLowerCase()));
   if (kept.length === lines.length) return false;
   fs.writeFileSync(PROSPECTS_FILE, kept.join('\n'));
@@ -46,7 +49,7 @@ function removeProspect(email) {
 }
 
 function loadLog() {
-  return fs.existsSync(LOG_FILE) ? JSON.parse(fs.readFileSync(LOG_FILE, 'utf8')) : { sent: {}, days: {}, followups: {} };
+  return fs.existsSync(LOG_FILE) ? JSON.parse(readText(LOG_FILE)) : { sent: {}, days: {}, followups: {} };
 }
 function saveLog(log) {
   fs.writeFileSync(LOG_FILE, JSON.stringify(log, null, 2));

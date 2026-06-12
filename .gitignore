@@ -12,3 +12,4 @@ sender/declined.json
 sender/agent-log.md
 sender/agent-last-run.log
 sender/active-clients.json
+sender/task-log.txt
